@@ -10,7 +10,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-string FILE_PATH = "credencialesP33.txt";
+const string FILE_PATH = "credencialesP33.txt";
 
 void CheckAndCreateFile() {
     if (!fs::exists(FILE_PATH)) {
@@ -149,8 +149,9 @@ void MostrarClases() {
 }
 
 void Calificaciones() {
+
     double NotaMatematicas, NotaQuimica, NotaFisica, NotaIngles, NotaHistoria, NotaArtes, NotaEtica, NotaAtletismo;
-    cout << "Ingrese sus calificaciones (ultimo periodo)\n";
+    cout << "Ingrese sus calificaciones :\n";
     cout << "Matematicas: "; cin >> NotaMatematicas;
     cout << "Quimica: "; cin >> NotaQuimica;
     cout << "Fisica: "; cin >> NotaFisica;
@@ -160,11 +161,20 @@ void Calificaciones() {
     cout << "Etica: "; cin >> NotaEtica;
     cout << "Atletismo: "; cin >> NotaAtletismo;
 
-    double NotaPromedio = (NotaMatematicas + NotaArtes + NotaAtletismo + NotaQuimica + NotaHistoria + NotaIngles + NotaEtica + NotaFisica) / 8;
+    double NotaPromedio = (NotaMatematicas +
+        NotaArtes +
+        NotaAtletismo +
+        NotaQuimica +
+        NotaHistoria +
+        NotaIngles +
+        NotaEtica +
+        NotaFisica) / 8;
 
+cout << "Promedio: " << NotaPromedio << endl;
     if (NotaPromedio > 100 || NotaPromedio < 0) {
         cout << "Promedio imposible. Por favor ingresar calificaciones nuevamente\n";
     }
+
 }
 
 void HoraHastaSalida() {
@@ -174,9 +184,23 @@ void HoraHastaSalida() {
     time(&now);
     struct tm* Hora_Actual = localtime(&now);
 
+int HoraElegida;
+int MinutosElegidos;
+
+    do {
+        cout << "Ingrese su hora de salida: ";
+        cin >> HoraElegida;
+    } while (HoraElegida > 24 || HoraElegida < 0);
+
+    do {
+        cout << "Ingrese su minuto de salida: ";
+        cin >> MinutosElegidos;
+    } while (MinutosElegidos > 60 || MinutosElegidos < 0);
+
+
     Hora_Salida = *Hora_Actual;
-    Hora_Salida.tm_hour = 15;
-    Hora_Salida.tm_min = 0;
+    Hora_Salida.tm_hour = HoraElegida;
+    Hora_Salida.tm_min = MinutosElegidos;
     Hora_Salida.tm_sec = 0;
 
     time_t Hora_Salida1 = mktime(&Hora_Salida);
@@ -191,7 +215,7 @@ void HoraHastaSalida() {
     int minutes_left = (seconds_left - hours_left * 3600) / 60;
     int seconds_left_int = seconds_left - (hours_left * 3600 + minutes_left * 60);
 
-    cout << "Tiempo restante hasta las 3PM: "
+    cout << "Tiempo restante hasta su hora de salida: "
          << hours_left << " horas, "
          << minutes_left << " minutos, "
          << seconds_left_int << " segundos.\n";
