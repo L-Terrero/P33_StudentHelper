@@ -1,27 +1,27 @@
 #ifndef P33_FUNC_H
 #define P33_FUNC_H
 
-#include <iostream>
 #include <string>
-#include <ctime>
-#include <fstream>
 #include <vector>
-#include <functional>
-#include <filesystem>
 
 using namespace std;
-namespace fs = std::filesystem;
 
-extern string FILE_PATH;
 
-void CheckAndCreateFile();
+extern const string CREDENCIALES_FILEPATH;
+extern const string CLASSES_FILEPATH;
+
+
+void CheckAndCreateClassesFile();
+vector<string> LoadClasses();
+void SaveClasses(const vector<string>& classes);
 void hora();
-extern vector<string> clases;
 void RegistrarUsuario();
 bool IniciarSesion();
-void CambiarNombreDeClase();
+void CambiarNombreDeClase(vector<string>& classes);
+void AgregarClase(vector<string>& classes);
+void EliminarClase(vector<string>& classes);
+void MostrarClases(const vector<string>& classes);
 void Asistencia();
-void MostrarClases();
 void Calificaciones();
 void HoraHastaSalida();
 bool SwitchReset();
