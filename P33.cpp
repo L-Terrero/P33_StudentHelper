@@ -333,7 +333,9 @@ vector<string> classes = LoadClasses();
             cout << "3) Promedio\n";
             cout << "4) Hora hasta salida\n";
             cout << "5) Cambiar nombre de clase\n";
-            cout << "6) Cerrar sesion\n";
+            cout << "6) Agregar clase\n";
+            cout << "7) Eliminar clase\n";
+            cout << "0) Salir\n";
             cin >> opcion;
 
             switch (opcion) {
