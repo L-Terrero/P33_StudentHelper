@@ -284,9 +284,17 @@ void HoraHastaSalida() {
 
 bool SwitchReset() {
     char choice;
-    cout << "\nDesea volver al menu principal? (Y/N): ";
-    cin >> choice;
-    return (choice == 'Y' || choice == 'y');
+    while (true) {
+        cout << "\nDesea volver al menu principal? (Y/N): ";
+        cin >> choice;
+        if (choice == 'Y' || choice == 'y') {
+            return true;
+        } else if (choice == 'N' || choice == 'n') {
+            return false;
+        } else {
+            cout << "Entrada invalida. Por favor, ingrese 'Y' o 'N'.\n";
+        }
+    }
 }
 
 int main() {
@@ -336,7 +344,7 @@ vector<string> classes = LoadClasses();
             cout << "6) Agregar clase\n";
             cout << "7) Eliminar clase\n";
             cout << "0) Salir\n";
-            cin >> opcion;
+            cout << "Decision:  "; cin >> opcion;
 
             switch (opcion) {
                 case 1: Asistencia(); break;
@@ -360,12 +368,11 @@ vector<string> classes = LoadClasses();
         }
 
         if (loggedIn) {
-            opc = SwitchReset();
+    opc = SwitchReset();
         } else {
             opc = false;
         }
 
     } while (opc);
 
-    return 0;
 }
