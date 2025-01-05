@@ -6,15 +6,15 @@
 #include <functional>
 #include <filesystem>
 #include <cmath>
-#include <P33_FUNC.h>
+#include "P33_FUNC.h"
 
 using namespace std;
 namespace fs = filesystem;
 
-const string CREDENCIALES_FILEPATH = "credencialesP33.txt";
-const string CLASSES_FILEPATH = "classes.txt";
+const string CREDENCIALES_FILEPATH = "C:\\Users\\luist\\CLionProjects\\untitled6\\credencialesP33.txt";
+const string CLASSES_FILEPATH = "C:\\Users\\luist\\CLionProjects\\untitled6\\classes.txt";
 
-void CheckAndCreateFile() {
+void CheckAndCreateClassesFile() {
     if (!fs::exists(CREDENCIALES_FILEPATH)) {
         ofstream file(CREDENCIALES_FILEPATH);
         if (!file) {
@@ -25,29 +25,11 @@ void CheckAndCreateFile() {
     }
 }
 
-void CheckAndCreateClassesFile() {
-    if (!fs::exists(CLASSES_FILEPATH)) {
-        ofstream file(CLASSES_FILEPATH);
-        if (!file) {
-            cout << "Error al crear el archivo de clases.\n";
-            return;
-        }
-        vector<string> defaultClasses = {
-            "Historia", "Quimica", "Fisica", "Ingles",
-            "Matematicas", "Artes", "Atletismo", "Etica"
-        };
-        for (const auto& cls : defaultClasses) {
-            file << cls << endl;
-        }
-        cout << "Archivo de clases creado exitosamente con clases predeterminadas.\n";
-    }
-}
-
 vector<string> LoadClasses() {
     vector<string> classes;
     ifstream file(CLASSES_FILEPATH);
     if (!file) {
-        cout << "Error al cargar las clases. Asegúrese de que 'classes.txt' exista.\n";
+        cout << "Error al cargar las clases. Asegurese de que 'classes.txt' exista.\n";
         return classes;
     }
 
@@ -60,7 +42,7 @@ vector<string> LoadClasses() {
     return classes;
 }
 
-void SaveClasses(const vector<string>& classes) {
+void GuardarClases(const vector<string>& classes) {
     ofstream file(CLASSES_FILEPATH);
     if (!file) {
         cout << "Error al guardar las clases.\n";
@@ -150,19 +132,40 @@ void CambiarNombreDeClase(vector<string>& classes) {
     classes[index - 1] = newName;
     cout << "Nombre de clase actualizado correctamente." << endl;
 
-    SaveClasses(classes);
+    GuardarClases(classes);
 }
 
 void AgregarClase(vector<string>& classes) {
     string newClass;
-    cout << "Ingrese el nombre de la nueva clase: ";
-    cin.ignore();
-    getline(cin, newClass);
+    char decision;
 
-    classes.push_back(newClass);
-    SaveClasses(classes);
-    cout << "Clase agregada exitosamente: " << newClass << endl;
+    do {
+        cout << "Ingrese el nombre de la nueva clase: ";
+        cin.ignore();
+        getline(cin, newClass);
+
+        classes.push_back(newClass);
+        GuardarClases(classes);
+        cout << "Clase agregada exitosamente: " << newClass << endl;
+
+        bool validInput = false;
+        while (!validInput) {
+            cout << "Desea agregar otra clase? (Y/N): ";
+            cin >> decision;
+            decision = tolower(decision);
+
+            if (decision == 'y' || decision == 'n') {
+                validInput = true;
+                if (decision == 'n') {
+                    cout << "Volviendo al menu principal.\n";
+                }
+            } else {
+                cout << "Ingrese tan solo 'Y' o 'N'.\n";
+            }
+        }
+    } while (decision == 'y');
 }
+
 
 void EliminarClase(vector<string>& classes) {
     int index;
@@ -181,7 +184,7 @@ void EliminarClase(vector<string>& classes) {
     string removedClass = classes[index - 1];
     classes.erase(classes.begin() + index - 1);
 
-    SaveClasses(classes);
+    GuardarClases(classes);
 
     cout << "Clase eliminada exitosamente: " << removedClass << endl;
 }
@@ -194,18 +197,23 @@ void MostrarClases(const vector<string>& classes) {
 }
 
 void Asistencia() {
-    int ClasesTotal = 8;
+    int ClasesTotal;
     int ClasesAusente;
 
-    cout << "He faltado a : \n";
-    cin >> ClasesAusente;
-    if (ClasesAusente > ClasesTotal) {
-        cout << "Cantidad de clases con ausencia mayor a clases en total \n";
-        return;
+    do {
+    cout << "Cuantas clases ha tomado? \n";
+    cin >>  ClasesTotal;
     }
+    while (ClasesTotal < 0);
+
+    do {
+        cout << "He faltado a : \n";
+        cin >> ClasesAusente;
+    }
+    while (ClasesAusente > ClasesTotal || ClasesAusente < 0);
 
     int Total = ClasesTotal - ClasesAusente;
-    cout << "Ha asistido a un total de: " << Total << " clases de 8 clases\n";
+    cout << "Ha asistido a un total de: " << Total << " clases de " << ClasesTotal << " clases\n";
 
     double porciento = (static_cast<double>(Total) / ClasesTotal) * 100;
     cout << "En promedio, asiste a un total de: " << porciento << "%\n";
@@ -224,13 +232,13 @@ void Calificaciones() {
     cout << "Atletismo: "; cin >> NotaAtletismo;
 
     double NotaPromedio = (NotaMatematicas +
-        NotaArtes +
-        NotaAtletismo +
-        NotaQuimica +
-        NotaHistoria +
-        NotaIngles +
-        NotaEtica +
-        NotaFisica) / 8;
+                           NotaArtes +
+                           NotaAtletismo +
+                           NotaQuimica +
+                           NotaHistoria +
+                           NotaIngles +
+                           NotaEtica +
+                           NotaFisica) / 8;
 
     cout << "Promedio: " << NotaPromedio << endl;
     if (NotaPromedio > 100 || NotaPromedio < 0) {
@@ -299,13 +307,13 @@ bool SwitchReset() {
 
 int main() {
 
-vector<string> classes = LoadClasses();
+    vector<string> classes = LoadClasses();
 
     int opcion;
     bool opc = false;
     bool loggedIn = false;
 
-    CheckAndCreateFile();
+    CheckAndCreateClassesFile();
 
     cout << "Fecha y hora actual: ";
     hora();
@@ -368,7 +376,7 @@ vector<string> classes = LoadClasses();
         }
 
         if (loggedIn) {
-    opc = SwitchReset();
+            opc = SwitchReset();
         } else {
             opc = false;
         }
